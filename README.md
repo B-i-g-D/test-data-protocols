@@ -9,10 +9,11 @@ This repository now contains only one pipeline:
 ## Pipeline
 
 Flow:
-1. `dbt seed` writes `delta.raw.titanic_seed`
-2. `dbt run` builds `delta.analytics.survival_by_class`
-3. Delta table files are stored in MinIO bucket `warehouse`
-4. data is read back through Trino
+1. `scripts/prepare_dbt_seed.py` downloads full Titanic CSV into `dbt` seeds
+2. `dbt seed` writes `delta.raw.titanic_dataset` (full dataset)
+3. `dbt run` builds `delta.analytics.survival_by_class`
+4. Delta table files are stored in MinIO bucket `warehouse`
+5. data is read back through Trino
 
 ## Run
 

@@ -17,3 +17,4 @@ dbt/trino_pipeline/.user.yml
 dbt/trino_pipeline/target/
 dbt/trino_pipeline/logs/
 dbt/trino_pipeline/dbt_packages/
+dbt/trino_pipeline/seeds/titanic_dataset.csv

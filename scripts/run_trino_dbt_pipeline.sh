@@ -7,6 +7,12 @@ cd "${ROOT_DIR}"
 COMPOSE_FILE="infra/docker-compose.trino.yml"
 DBT_DIR="dbt/trino_pipeline"
 
+if [[ -x ".venv/bin/python" ]]; then
+  .venv/bin/python scripts/prepare_dbt_seed.py
+else
+  python3 scripts/prepare_dbt_seed.py
+fi
+
 if [[ ! -f "${DBT_DIR}/profiles.yml" ]]; then
   cp "${DBT_DIR}/profiles.yml.example" "${DBT_DIR}/profiles.yml"
 fi
