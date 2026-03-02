@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.venv/
+.idea/
+.pytest_cache/
+.kaggle/
+data_lake/
+iceberg_catalog.db
+notebooks/iceberg_catalog.db
