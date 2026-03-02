@@ -1,0 +1,12 @@
+trino_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: trino
+      method: none
+      host: trino
+      port: 8080
+      user: dbt
+      database: delta
+      schema: analytics
+      threads: 4

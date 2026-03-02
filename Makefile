@@ -1,23 +1,24 @@
-.PHONY: help setup run test clean
+.PHONY: help pipeline-up pipeline-run pipeline-read pipeline-down clean
 
 help:
 	@echo "Targets:"
-	@echo "  make setup  - create venv and install project"
-	@echo "  make run    - one-click demo run (download + write all formats)"
-	@echo "  make test   - run tests"
-	@echo "  make clean  - remove local build/cache artifacts"
+	@echo "  make pipeline-up   - start Trino + MinIO + dbt containers"
+	@echo "  make pipeline-run  - run dbt -> Trino -> S3 (Delta-only)"
+	@echo "  make pipeline-read - read transformed Delta table through Trino"
+	@echo "  make pipeline-down - stop containers"
+	@echo "  make clean         - remove local generated artifacts"
 
-setup:
-	python3 -m venv .venv
-	.venv/bin/pip install -U pip
-	.venv/bin/pip install -e .
+pipeline-up:
+	docker compose -f infra/docker-compose.trino.yml up -d --remove-orphans
 
-run:
-	./scripts/run_demo.sh
+pipeline-run:
+	./scripts/run_trino_dbt_pipeline.sh
 
-test:
-	.venv/bin/pip install -e ".[dev]"
-	PYTHONPATH=src .venv/bin/pytest -q
+pipeline-read:
+	./scripts/read_trino_table.sh
+
+pipeline-down:
+	docker compose -f infra/docker-compose.trino.yml down
 
 clean:
-	rm -rf __pycache__ .pytest_cache data_lake
+	rm -rf data_lake notebooks/data_lake __pycache__ .pytest_cache

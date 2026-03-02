@@ -1,11 +1,19 @@
-__pycache__/
-*.py[cod]
-*.egg-info/
 .env
 .venv/
 .idea/
-.pytest_cache/
 .kaggle/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*.egg-info/
+
+# local outputs
 data_lake/
-iceberg_catalog.db
-notebooks/iceberg_catalog.db
+notebooks/data_lake/
+
+# dbt local artifacts
+dbt/trino_pipeline/profiles.yml
+dbt/trino_pipeline/.user.yml
+dbt/trino_pipeline/target/
+dbt/trino_pipeline/logs/
+dbt/trino_pipeline/dbt_packages/

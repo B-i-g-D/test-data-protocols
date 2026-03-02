@@ -1,0 +1,40 @@
+services:
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  mc-init:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc alias set local http://minio:9000 minioadmin minioadmin) do echo 'waiting for minio'; sleep 2; done;
+      /usr/bin/mc mb -p local/warehouse || true;
+      "
+
+  trino:
+    image: trinodb/trino:latest
+    depends_on:
+      - mc-init
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./trino/etc:/etc/trino
+
+  dbt:
+    build:
+      context: ./dbt
+      dockerfile: Dockerfile
+    depends_on:
+      - trino
+    working_dir: /workspace/dbt/trino_pipeline
+    volumes:
+      - ../:/workspace
+    command: ["sleep", "infinity"]

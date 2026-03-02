@@ -1,0 +1,22 @@
+name: trino_pipeline
+version: 1.0.0
+config-version: 2
+
+profile: trino_pipeline
+
+seed-paths: ["seeds"]
+model-paths: ["models"]
+
+on-run-start:
+  - "create schema if not exists delta.raw"
+  - "create schema if not exists delta.analytics"
+
+seeds:
+  trino_pipeline:
+    +schema: raw
+
+models:
+  trino_pipeline:
+    +materialized: table
+    marts:
+      +schema: analytics

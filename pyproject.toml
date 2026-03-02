@@ -3,35 +3,17 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "kaggle-s3-lake"
+name = "trino-delta-s3-pipeline"
 version = "0.1.0"
-description = "Download a public dataset and publish it locally as Parquet, Delta, and Iceberg"
+description = "Local dbt -> Trino -> S3 pipeline with Delta Lake tables"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "Data Platform Team" }]
 dependencies = [
-  "certifi>=2024.0.0",
-  "deltalake>=0.18",
-  "pandas>=2.2",
-  "pyarrow>=15.0",
-  "pyiceberg[sql-sqlite]>=0.8.0",
-  "python-dotenv>=1.0",
-  "tabulate>=0.9"
+  "pandas>=2.2"
 ]
-
-[project.scripts]
-kaggle-s3-lake = "kaggle_s3_lake.cli:main"
 
 [project.optional-dependencies]
-dev = [
-  "pytest>=8.2"
+notebook = [
+  "jupyter>=1.0"
 ]
-
-[tool.setuptools]
-package-dir = {"" = "src"}
-
-[tool.setuptools.packages.find]
-where = ["src"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
