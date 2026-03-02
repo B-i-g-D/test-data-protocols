@@ -1,28 +1,28 @@
 # Public Dataset -> Local Multi-Format Lake
 
-Проєкт завантажує публічний датасет і зберігає його локально одразу в 3 форматах:
+This project downloads a public dataset and stores it locally in three formats:
 - Parquet
 - Delta Lake
 - Iceberg
 
-Також є read-функціонал для кожного формату.
+It also provides read functionality for each format.
 
-## Швидкий старт
+## Quick Start
 
 ```bash
 make run
 ```
 
-Що зробить `make run`:
-- створить `.venv` (якщо нема),
-- встановить залежності,
-- підхопить `.env.example` (якщо `.env` відсутній),
-- виконає `ingest` з дефолтним публічним Titanic URL.
+What `make run` does:
+- creates `.venv` if it does not exist,
+- installs dependencies,
+- copies `.env.example` to `.env` if needed,
+- runs `ingest` with the default public Titanic URL.
 
-Альтернатива для PyCharm/IDE:
-- просто натисни `Run` для [main.py](/Users/dmytrosylenok/PycharmProjects/test-data-protocols/main.py) (без аргументів).
+Alternative for PyCharm/IDE:
+- click `Run` on [main.py](/Users/dmytrosylenok/PycharmProjects/test-data-protocols/main.py) with no arguments.
 
-## 1) Встановлення вручну
+## 1) Manual Setup
 
 ```bash
 python3 -m venv .venv
@@ -31,30 +31,30 @@ pip install -U pip
 pip install -e .
 ```
 
-## 2) Конфіг
+## 2) Config
 
 ```bash
 cp .env.example .env
 ```
 
-Заповни `.env`:
-- `LAKE_ROOT` (локальна папка lake, за замовчуванням `./data_lake`)
-- `ICEBERG_CATALOG_URI` (де тримати метадані Iceberg каталогу)
+Fill `.env`:
+- `LAKE_ROOT` (local lake folder, default `./data_lake`)
+- `ICEBERG_CATALOG_URI` (where Iceberg catalog metadata is stored)
 
-## 3) Імпорт датасету в локальний lake
+## 3) Ingest Dataset to Local Lake
 
-Найпростіший запуск (повністю на дефолтах):
+Simplest run (all defaults):
 ```bash
 kaggle-s3-lake ingest
 ```
 
-Це використає:
+Defaults:
 - source URL: `https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv`
 - dataset id: `titanic`
-- lake root: `./data_lake` (або `LAKE_ROOT` з `.env`)
+- lake root: `./data_lake` (or `LAKE_ROOT` from `.env`)
 - prefix: `kaggle-datasets`
 
-Кастомний запуск:
+Custom run:
 ```bash
 kaggle-s3-lake ingest \
   --source-url https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv \
@@ -64,18 +64,18 @@ kaggle-s3-lake ingest \
   --catalog-name local
 ```
 
-Опціонально:
+Optional:
 - `--lake-root ./data_lake`
-- `--sample-limit 1000` щоб обмежити обсяг
+- `--sample-limit 1000` to limit data size
 
-Після ingest буде створено:
+After ingest, the project creates:
 - `<lake_root>/<prefix>/<dataset_id>/parquet/data.parquet`
 - `<lake_root>/<prefix>/<dataset_id>/delta/`
-- Iceberg table в namespace/table з warehouse `<lake_root>/<prefix>/iceberg`
+- Iceberg table in namespace/table with warehouse `<lake_root>/<prefix>/iceberg`
 - `<lake_root>/<prefix>/<dataset_id>/manifest.json`
 - `<lake_root>/<prefix>/<dataset_id>/metrics.json`
 
-## 4) Читання назад
+## 4) Read Back
 
 ### Parquet
 ```bash
@@ -98,20 +98,20 @@ kaggle-s3-lake read \
   --prefix kaggle-datasets
 ```
 
-## Логування і метрики
+## Logging and Metrics
 
-- Логи виводяться автоматично на рівні `INFO`.
-- Після `ingest` формується `metrics.json` з таймінгами етапів і розмірами артефактів.
-- Під час `read` у stdout виводиться `read_seconds`.
+- Logs are emitted at `INFO` level by default.
+- `ingest` generates `metrics.json` with step timings and artifact sizes.
+- `read` prints `read_seconds` to stdout.
 
-## Тести
+## Tests
 
 ```bash
 pip install -e ".[dev]"
 PYTHONPATH=src pytest -q
 ```
 
-## Make targets
+## Make Targets
 
 ```bash
 make setup
